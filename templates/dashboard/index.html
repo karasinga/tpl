@@ -1,0 +1,42 @@
+{% extends 'partials/base.html' %}
+{% block title %} Home page{% endblock %}
+
+
+    {% block content %}
+        {% include 'partials/topside_nav.html' %}
+        <div class="container">
+        <div class="row">
+            <div class="col">
+                {% if user.is_authenticated and user.is_staff and user.is_superuser %}
+
+
+            //TODO: INCLUDE ADMIN ONLY access HERE.
+
+
+
+        {% autoescape off %}
+            {{ sales_plot }}
+            <hr>
+            {{ all_plot }}
+            <hr>
+            {{ lab_plot }}
+            <hr>
+            {{ phar_plot }}
+            <hr>
+            {{ contrib_lists }}
+            <hr>
+            {{ total_sales_plot }}
+            <hr>
+            {{ moving_target_plot }}
+        {% endautoescape%}}
+            {% else %}
+            {% include 'dashboard/staff_index.html' %}
+        {% endif %}
+
+            </div>
+        </div>
+        </div>
+
+
+
+    {% endblock %}
