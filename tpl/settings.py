@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'user',
     'crispy_forms',
     'bootstrap_datepicker_plus',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
+# Time in seconds to stay inactive for a session to end.
+SESSION_COOKIE_AGE = 300
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

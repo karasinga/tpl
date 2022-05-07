@@ -1,3 +1,4 @@
+
 <!--Topside-->
 <div class="container">
     <div class="row mt-4">
@@ -8,7 +9,8 @@
                 </div>
                 <div class="card-body">
                     <marquee behavior="" direction="">
-                        <h3 class="my-4">This is the Information</h3>
+                        <h3 class="my-4">The annual sales performance against the target is {{ perfomance_so_far}}% by the end of
+                            {{ last_month_with_data }}.</h3>
                     </marquee>
                 </div>
             </div>
@@ -21,28 +23,28 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <a class="text-decoration-none text-dark" href="staff.html">
+{#                            <a class="text-decoration-none text-dark" href="">#}
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Staff <i class="fas fa-users"></i></h4>
-                                    <h3>4</h3>
+                                    <h6>Monthly reports analyzed <i class="fas fa-users"></i></h6>
+                                    <h3>{{ reports_so_far }}</h3>
                                 </div>
-                            </a>
+{#                            </a>#}
                         </div>
                         <div class="col-md-4">
-                            <a class="text-decoration-none text-dark" href="product.html">
+{#                            <a class="text-decoration-none text-dark" href="">#}
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Products <i class="fas fa-box"></i></h4>
-                                    <h3>4</h3>
+                                    <h6>Current year sales <i class="fas fa-box"></i></h6>
+                                    <h3>{{ current_year_sales }}</h3>
                                 </div>
-                            </a>
+{#                            </a>#}
                         </div>
                         <div class="col-md-4">
-                            <a class="text-decoration-none text-dark" href="order.html">
+{#                            <a class="text-decoration-none text-dark" href="">#}
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Orders <i class="fas fa-shipping-fast"></i></h4>
-                                    <h3>4</h3>
+                                    <h6>Monthly sales to target <i class="fas fa-shipping-fast"></i></h6>
+                                    <h3>{{ monthly_target }}</h3>
                                 </div>
-                            </a>
+{#                            </a>#}
                         </div>
                     </div>
                 </div>

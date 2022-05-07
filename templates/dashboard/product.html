@@ -4,16 +4,16 @@
 {% load crispy_forms_tags %}
 {% load month_tags %}
 {% block content %}
-     <header class="masthead">
-  <div class="container h-100">
-    <div class="row h-100 align-items-center">
-      <div class="col-12 text-center">
-        <h1 class="fw-light">Monthly tracker page</h1>
-{#        <p class="lead">A great starter layout for a landing page</p>#}
+    <header class="masthead">
+      <div class="container h-100">
+        <div class="row h-100 align-items-center">
+          <div class="col-12 text-center">
+            <h1 class="fw-light">Monthly tracker page</h1>
+    {#        <p class="lead">A great starter layout for a landing page</p>#}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</header>
+    </header>
     <div class="col-md-7 mt-5">
     <div >
 
@@ -31,7 +31,35 @@
     </div>
     </div>
 
-     <!--Table-->
+    <!--SEARCH TABLE-->
+{#    <form action="" method="get">#}
+{#    {{ myFilter.form }}#}
+{#    <button class="btn btn-primary" type="submit">Search</button>#}
+{#    </form>#}
+    <form method="get">
+    <div class="form-row container-fluid">
+      <div class="form-group col-md-2 mb-0">
+        {{ myFilter.form.year__lte|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-2 mb-0">
+        {{ myFilter.form.year__gte|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+        {{ myFilter.form.month|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+        {{ myFilter.form.sales__lte|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+        {{ myFilter.form.sales__gte|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+        <button type="submit" class="btn btn-info mt-4 btn-lg">Search</button>
+      </div>
+    </div>
+  </form>
+     <!--end of SEARCH TABLE-->
+    <!--Table-->
     <div class="container-fluid">
         <div class="row my-4">
             <div class="col-md-auto">
@@ -42,8 +70,8 @@
                             <th scope="col">Year</th>
                             <th scope="col">Month</th>
                             <th scope="col">Sales</th>
-                            <th scope="col">Lab contribution</th>
-                            <th scope="col">Pharmacy contribution</th>
+                            <th scope="col">Lab contr</th>
+                            <th scope="col">Pharmacy contr</th>
                             <th scope="col">Last updated</th>
                             <th scope="col">First time saved</th>
                             <th scope="col">Activity</th>
@@ -99,7 +127,7 @@
                         {% csrf_token %}
                         {{ form|crispy }}
 
-                        <input class="btn btn-success btn-block" type="submit" value="Add Product">
+                        <input class="btn btn-success btn-block" type="submit" value="Add Monthly Report">
 
                     </form>
                 </div>

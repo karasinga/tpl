@@ -1,7 +1,9 @@
 import calendar
+import math
 from datetime import datetime
+import functools
 
-import numpy as np
+# import numpy as np
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -16,7 +18,15 @@ from plotly.subplots import make_subplots
 
 from .forms import SalesForm, WeeklyDataForm, TwinkleForm, AnnualTargetForm
 from .models import Sales, WeeklyData, Twinkle, AnnualTarget
+from .filter import SalesFilter
 
+def millify(n):
+    millnames = ['',' K',' M',' Billion',' Trillion']
+    n = float(n)
+    millidx = max(0,min(len(millnames)-1,
+                        int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
+
+    return '{:.2f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
 
 def line_chart(df, x_axis, yaxis, title, color="year"):
     lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
@@ -36,7 +46,6 @@ def line_chart(df, x_axis, yaxis, title, color="year"):
     lab_per_fig.update_traces(textposition='top center')
     return lab_per_fig
 
-
 def bar_chart(df, x_axis, yaxis, title, color="year"):
     sales_fig = px.bar(df, x=x_axis, y=yaxis, color=color, barmode="group",
                        title=title, text="value",
@@ -54,7 +63,7 @@ def bar_chart(df, x_axis, yaxis, title, color="year"):
     return sales_fig
 
 
-def prep_trend(df, indy1, indy2, indy3, indy4, indy5, indy6, title_text):
+def sales_trend(df, indy1, indy2, indy3, indy4, indy5, indy6, title_text):
     df['year']=df['year'].astype(str)
     # df = df.sort_values(by='month_date')
     # Create figure with secondary y-axis
@@ -144,11 +153,17 @@ def pagination_(request, item_list):
 
 
 # Create your views here.
-@login_required
+@login_required(login_url='user-login')
+@functools.lru_cache(maxsize=10)
 def index(request):
+    # if "q" in request.GET:
+    #     pass
+    #     # qs=Sales.objects.filter()
+    # else:
     # get all data from database
     qs = Sales.objects.all()
     ts = AnnualTarget.objects.all()
+    wk = WeeklyData.objects.all()
     # assign it to a dataframe using list comprehension
     sales_data = [
         {'year': x.year,
@@ -164,11 +179,21 @@ def index(request):
          'target': x.target,
          } for x in ts
     ]
+
+    weekly_data = [
+        {'end of weekly date': x.end_date,
+         'amount_received': x.amount_received,
+         'amount_referred': x.amount_referred,
+         'balance': x.balance,
+         } for x in wk
+    ]
     # convert data from database to a dataframe
     df = pd.DataFrame(sales_data)
     df_target = pd.DataFrame(target_data)
+    df_weekly = pd.DataFrame(weekly_data)
+    # print(df_weekly)
     df = df_target.merge(df, on="year", how='right')
-    # print(dfinal)
+    # print(df)
     df['year'] = df['year'].astype(str)
     df['month'] = df['month'].astype(str)
     df['year_month'] = df['year'] + df['month']
@@ -181,10 +206,10 @@ def index(request):
     df_all = df.copy()
     df_target['year'] = df_target['year'].astype(str)
     df_all = df_target.merge(df, on="year", how='right')
-    print("df all-----")
+    # print("df all-----")
     df_target['year'] = df_target['year'].astype(str).astype(int)
     df_target = df_target.sort_values("year")
-    print(df_all)
+    # print(df_all)
 
     df['month'] = df['month'].apply(lambda x: calendar.month_abbr[int(x)])
     # print(df)
@@ -203,8 +228,14 @@ def index(request):
     ))
 
     # df_alls = df.melt(id_vars=['year', 'year_month', 'month'], value_vars=['lab_contribution', 'pharmacy_contribution'])
-    # print(df_alls)
-    all_fig = px.bar(df, x="year_month", y=['pharmacy_contribution', 'lab_contribution'],
+    df['month_year']=df['year_month'].dt.strftime('%b-%Y')
+    reports_so_far=df.shape[0]
+    # print(df)
+    last_month_with_data=df['month_year'].iloc[-1]
+    current_year_df=df[df['year']==sorted(df['year'].unique())[-1]]
+    current_year_sales=millify(sum(current_year_df['sales']))
+    # last_month_with_data=last_month_with_data.strftime('%B-%Y')
+    all_fig = px.bar(df, x="month_year", y=['pharmacy_contribution', 'lab_contribution'],
                      title=f"Laboratory and Pharmacy Sales trend   "
                            f"Max Pharmarcy: {max(df['pharmacy_contribution'])}  "
                            f"Max Laboratory: {max(df['lab_contribution'])}",
@@ -286,7 +317,8 @@ def index(request):
     # print(total_sales_df.dtypes)
     total_sales_df['year'] = total_sales_df['year'].astype(str).astype(int)
     total_sales_df = total_sales_df.sort_values("year")
-    total_sales_fig = prep_trend(total_sales_df, 'target', 'sales', 'total pharmacy sales', 'total Lab sales',
+    perfomance_so_far=total_sales_df["annual performance %"].iloc[-1]
+    total_sales_fig = sales_trend(total_sales_df, 'target', 'sales', 'total pharmacy sales', 'total Lab sales',
                                  'annual performance %', 'year', 'Annual Performance')
     # total_sales_fig = px.bar(total_sales_df, x="year", y="value", text_auto=".3s", barmode="group",
     #                          color="variable", title=f"Annual contribution of Laboratory and Pharmacy Sales")
@@ -307,20 +339,17 @@ def index(request):
     current_year['deficit'] = current_year['target'] - current_year['sales']
     current_year['current month name'] = datetime.now().month
     current_year['current month name'] = datetime.now().month
-    last_report = df_all.iloc[[-1]]
+    last_report = df_all.iloc[[-1]].copy()
     last_report['last report'] = last_report['year_month'].dt.month
     current_year['remaining months'] = 12 - last_report.iloc[0, -1]
     current_year['deficit per months'] = current_year['deficit'] / current_year['remaining months']
     last_report_month = last_report.iloc[0, -1]
     overall_deficit = current_year['deficit per months'].iloc[0]
-    print(current_year)
+    # print(current_year)
 
     def moving_target(last_report_month, deficit):
-        months = []
         months_to_go = range(last_report_month + 1, 13)
-        print(months_to_go)
-        for m in months_to_go:
-            months.append(calendar.month_name[int(m)])
+        months = [calendar.month_name[int(m)] for m in months_to_go]
         moving_target_df = pd.DataFrame({'months': months,'deficit': deficit})
         fig = px.line(moving_target_df, x="months", y="deficit", text='deficit',
                       title="Remaining months target")
@@ -329,7 +358,7 @@ def index(request):
         return fig
 
     moving_target_fig = moving_target(last_report_month, overall_deficit)
-
+    monthly_target=millify(overall_deficit)
     sales_plot = plot(sales_fig, output_type="div")
     all_plot = plot(all_fig, output_type="div")
     lab_plot = plot(lab_per_fig, output_type="div")
@@ -337,6 +366,8 @@ def index(request):
     contr_plot = plot(contrib_fig, output_type="div")
     total_sales_plot = plot(total_sales_fig, output_type="div")
     moving_target_plot = plot(moving_target_fig, output_type="div")
+
+
 
     context = {
         "sales_plot": sales_plot,
@@ -346,11 +377,17 @@ def index(request):
         "contrib_lists": contr_plot,
         "total_sales_plot": total_sales_plot,
         "moving_target_plot": moving_target_plot,
+        "perfomance_so_far":perfomance_so_far,
+        "last_month_with_data":last_month_with_data,
+        "reports_so_far":reports_so_far,
+        "current_year_sales":current_year_sales,
+        "monthly_target":monthly_target,
+
     }
     return render(request, "dashboard/index.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def staff(request):
     # # get all data from database
     # qs = Project.object.all()
@@ -382,9 +419,12 @@ def staff(request):
     return render(request, "dashboard/staff.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def products(request):
     item_list = Sales.objects.all().order_by('-year', 'month')
+    # FILTER SALES MODEL
+    my_filter = SalesFilter(request.GET, queryset=item_list)
+    item_list = my_filter.qs
     if request.method == "POST":
         form = SalesForm(request.POST)
         if form.is_valid():
@@ -400,16 +440,17 @@ def products(request):
     context = {
         'form': form,
         "items": items,
+        "myFilter": my_filter,
     }
     return render(request, "dashboard/product.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def order(requests):
     return render(requests, "dashboard/order.html")
 
 
-@login_required
+@login_required(login_url='user-login')
 def product_update(request, pk):
     item = Sales.objects.get(id=pk)
     if request.method == "POST":
@@ -425,7 +466,7 @@ def product_update(request, pk):
     return render(request, 'dashboard/product_update.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def product_delete(request, pk):
     item = Sales.objects.get(id=pk)
     if request.method == "POST":
@@ -437,7 +478,7 @@ def product_delete(request, pk):
     return render(request, 'dashboard/product_delete.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def weekly_sales(request):
     item_list = WeeklyData.objects.all().order_by('start_date')
     if request.method == "POST":
@@ -460,7 +501,7 @@ def weekly_sales(request):
     return render(request, "dashboard/product_weekly.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def weekly_sales_update(request, pk):
     item = WeeklyData.objects.get(id=pk)
     if request.method == "POST":
@@ -476,7 +517,7 @@ def weekly_sales_update(request, pk):
     return render(request, 'dashboard/product_weekly_update.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def weekly_sales_delete(request, pk):
     item = WeeklyData.objects.get(id=pk)
     if request.method == "POST":
@@ -488,7 +529,7 @@ def weekly_sales_delete(request, pk):
     return render(request, 'dashboard/product_weekly_delete.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def twinkle_commission(request):
     item_list = Twinkle.objects.all()
     if request.method == "POST":
@@ -511,7 +552,7 @@ def twinkle_commission(request):
     return render(request, "dashboard/twinkle.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def twinkle_delete(request, pk):
     item = Twinkle.objects.get(id=pk)
     if request.method == "POST":
@@ -523,7 +564,7 @@ def twinkle_delete(request, pk):
     return render(request, 'dashboard/twinkle_delete.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def twinkle_update(request, pk):
     item = Twinkle.objects.get(id=pk)
     if request.method == "POST":
@@ -539,9 +580,9 @@ def twinkle_update(request, pk):
     return render(request, 'dashboard/twinkle_update.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def targets(request):
-    item_list = AnnualTarget.objects.all()
+    item_list = AnnualTarget.objects.all().order_by('year')
     if request.method == "POST":
         form = AnnualTargetForm(request.POST)
         if form.is_valid():
@@ -561,7 +602,7 @@ def targets(request):
     return render(request, "dashboard/target.html", context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def target_update(request, pk):
     item = AnnualTarget.objects.get(id=pk)
     if request.method == "POST":
@@ -577,7 +618,7 @@ def target_update(request, pk):
     return render(request, 'dashboard/target_update.html', context)
 
 
-@login_required
+@login_required(login_url='user-login')
 def target_delete(request, pk):
     item = AnnualTarget.objects.get(id=pk)
     if request.method == "POST":
