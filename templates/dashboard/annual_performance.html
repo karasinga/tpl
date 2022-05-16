@@ -1,5 +1,5 @@
 {% extends 'partials/base.html' %}
-{% block title %} Trends {% endblock %}
+{% block title %} Annual performance{% endblock %}
 
 
     {% block content %}
@@ -15,19 +15,19 @@
 {#            {{ lab_plot }}#}
 {#            {{ sales_plot|safe}}#}
 {#        {% autoescape off %}#}
-            <hr>
-            {{ sales_plot|safe}}
-            <hr>
-            {{ all_plot|safe }}
-            <hr>
+{#            <hr>#}
+{#            {{ sales_plot|safe}}#}
+{#            <hr>#}
+{#            {{ all_plot|safe }}#}
+{#            <hr>#}
 {#            {{ lab_plot|safe }}#}
 {#            <hr>#}
 {#            {{ phar_plot|safe }}#}
 {#            <hr>#}
-{#            {{ contrib_lists|safe }}#}
-{#            <hr>#}
-{#            {{ total_sales_plot|safe }}#}
-{#            <hr>#}
+            {{ contrib_lists|safe }}
+            <hr>
+            {{ total_sales_plot|safe }}
+            <hr>
 {#            {{ moving_target_plot|safe }}#}
 {#            <hr>#}
 {#        {% endautoescape%}#}

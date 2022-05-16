@@ -2,7 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('dashboard/', views.index, name="dashboard-index"),
+    path('trends/', views.index, name="dashboard-index"),
+    path('lab-phram-contribution/', views.contribution, name="dashboard-contribution"),
+    path('annual-performance/', views.annual_performance, name="dashboard-annual_performance"),
+    path('moving-target/', views.moving_target, name="dashboard-moving_target"),
     path('staff/', views.staff, name="dashboard-staff"),
     path('product/', views.products, name="dashboard-product"),
     path('product/weekly/', views.weekly_sales, name="dashboard-product-weekly"),

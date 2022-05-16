@@ -19,7 +19,7 @@ class SalesForm(ModelForm):
         #     'sales': ['lte','gte'],
         # }
 
-        exclude = ['pharmacy_contribution','lab_contribution']
+        # exclude = ['pharmacy_contribution','lab_contribution']
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args,**kwargs)

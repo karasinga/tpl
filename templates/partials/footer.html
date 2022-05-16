@@ -1,19 +1,28 @@
 <!-- Remove the container if you want to extend the Footer to full width. -->
-<div class="container bg-info col-lg">
-  <!-- Footer -->
-<footer>
-       <!-- Copyright -->
-    <div
-         class="text-center p-3"
+{#<div class="container bg-info col-lg fixed-bottom">#}
+{#  <!-- Footer -->#}
+{#<footer>#}
+{#       <!-- Copyright -->#}
+{#    <div#}
+{#         class="text-center p-3"#}
+{##}
+{#         >#}
+{##}
+{#      © {% now "Y" %} Copyright:#}
+{#      <a class="text-dark" href="#"#}
+{#         >Developed by anatomised reboot.</a#}
+{#        >#}
+{#    </div>#}
+{#    <!-- Copyright -->#}
+{#</footer>#}
+{#</div>#}
+<!-- End of .container -->
 
-         >
-
+<div id="container">
+    <div class="footer text-center p-3">
       © {% now "Y" %} Copyright:
       <a class="text-dark" href="#"
          >Developed by anatomised reboot.</a
         >
     </div>
-    <!-- Copyright -->
-</footer>
 </div>
-<!-- End of .container -->

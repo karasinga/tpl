@@ -3,20 +3,20 @@
 <div class="container">
     <div class="row mt-4">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card  border-light bg-transparent">
                 <div class="card-header bg-info text-white">
                     Information
                 </div>
-                <div class="card-body">
+                <div class="card-body ">
                     <marquee behavior="" direction="">
-                        <h3 class="my-4">The annual sales performance against the target is {{ perfomance_so_far}}% by the end of
+                        <h3 class="my-4 text-info">The annual sales performance against the target is {{ perfomance_so_far}}% by the end of
                             {{ last_month_with_data }}.</h3>
                     </marquee>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-            <div class="card">
+            <div class="card bg-transparent border-light">
                 <div class="card-header bg-info text-white">
                     Statistics
                 </div>
@@ -24,15 +24,15 @@
                     <div class="row">
                         <div class="col-md-4">
 {#                            <a class="text-decoration-none text-dark" href="">#}
-                                <div class="card my-card shadow text-center p-3">
-                                    <h6>Monthly reports analyzed <i class="fas fa-users"></i></h6>
+                                <div class="card bg-transparent my-card shadow text-center p-3 text-info">
+                                    <h6>Monthly reports analyzed <i class="fas fa-users "></i></h6>
                                     <h3>{{ reports_so_far }}</h3>
                                 </div>
 {#                            </a>#}
                         </div>
                         <div class="col-md-4">
 {#                            <a class="text-decoration-none text-dark" href="">#}
-                                <div class="card my-card shadow text-center p-3">
+                                <div class="card bg-transparent my-card shadow text-center p-3 text-info">
                                     <h6>Current year sales <i class="fas fa-box"></i></h6>
                                     <h3>{{ current_year_sales }}</h3>
                                 </div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-4">
 {#                            <a class="text-decoration-none text-dark" href="">#}
-                                <div class="card my-card shadow text-center p-3">
+                                <div class="card bg-transparent my-card shadow text-center p-3 text-info">
                                     <h6>Monthly sales to target <i class="fas fa-shipping-fast"></i></h6>
                                     <h3>{{ monthly_target }}</h3>
                                 </div>
