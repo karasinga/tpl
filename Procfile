@@ -1,1 +1,1 @@
-web: gunicorn tpl.wsgi--log-file-
+web: gunicorn tpl.wsgi --preload
