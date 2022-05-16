@@ -411,12 +411,12 @@ def dash():
     moving_target_fig = moving_target(last_report_month, overall_deficit)
     monthly_target = millify(overall_deficit)
     sales_plot = plot(sales_fig, include_plotlyjs=False, output_type="div")
-    all_plot = plot(all_fig, output_type="div")
-    lab_plot = plot(lab_per_fig, output_type="div")
-    phar_plot = plot(pharm_per_fig, output_type="div")
-    contr_plot = plot(contrib_fig, output_type="div")
-    total_sales_plot = plot(total_sales_fig, output_type="div")
-    moving_target_plot = plot(moving_target_fig, output_type="div")
+    all_plot = plot(all_fig, include_plotlyjs=False, output_type="div")
+    lab_plot = plot(lab_per_fig, include_plotlyjs=False, output_type="div")
+    phar_plot = plot(pharm_per_fig, include_plotlyjs=False, output_type="div")
+    contr_plot = plot(contrib_fig, include_plotlyjs=False, output_type="div")
+    total_sales_plot = plot(total_sales_fig, include_plotlyjs=False, output_type="div")
+    moving_target_plot = plot(moving_target_fig, include_plotlyjs=False, output_type="div")
     return monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
            perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target
 
