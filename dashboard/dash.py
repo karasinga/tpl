@@ -12,7 +12,7 @@ from plotly.offline import plot
 import plotly.express as px
 from plotly.subplots import make_subplots
 
-from .models import Sales, WeeklyData, AnnualTarget
+from .models import Sales, WeeklyData, AnnualTarget,MonthlyTargets,Twinkle,SummaryTable,Stock,Expiry
 
 import cProfile, pstats, io
 
@@ -35,7 +35,7 @@ def profile(fnc):
     return inner
 
 
-@lru_cache(maxsize=pow(2, 13))
+
 def millify(n):
     millnames = ['', ' K', ' M', ' Billion', ' Trillion']
     n = float(n)
@@ -45,12 +45,141 @@ def millify(n):
     return '{:.2f}{}'.format(n / 10 ** (3 * millidx), millnames[millidx])
 
 
+
+def line_chart_target(df, x_axis, yaxis, title,color="year"):
+    lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
+                          title=title, text=yaxis,
+                          # text_auto='.3s',
+                          category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
+                          )
+    lab_per_fig.add_hline(y=30, line_dash="dash", line_color="red")
+    lab_per_fig.add_annotation(x=0.5, y=30,
+                       text="Target 30%",
+                       showarrow=True,
+                       arrowhead=1)
+    lab_per_fig.update_layout(height=500)
+    lab_per_fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    lab_per_fig.update_traces(textposition='top center')
+    lab_per_fig.update_xaxes(showgrid=False)
+    lab_per_fig.update_yaxes(showgrid=False)
+    lab_per_fig.layout.xaxis.fixedrange = True
+    lab_per_fig.layout.yaxis.fixedrange = True
+    lab_per_fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+    })
+    return lab_per_fig
+
+def line_chart_stock_target(df, x_axis, yaxis,text, title,color="year"):
+    lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
+                          title=title, text=text,
+                          # text_auto='.3s',
+                          category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
+                          )
+    lab_per_fig.add_hline(y=1500000, line_dash="dash", line_color="green")
+    lab_per_fig.add_hline(y=1700000, line_dash="dash", line_color="red")
+    lab_per_fig.add_annotation(x=0.5, y=1500000,
+                       text="Minimum Target (1.5M)",
+                       showarrow=True,
+                       arrowhead=1)
+    lab_per_fig.add_annotation(x=1.5, y=1700000,
+                               text="Maximum Target (1.7M)",
+                               showarrow=True,
+                               arrowhead=1)
+    lab_per_fig.update_layout(height=500)
+    lab_per_fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    lab_per_fig.update_traces(textposition='top center')
+    lab_per_fig.update_xaxes(showgrid=False)
+    lab_per_fig.update_yaxes(showgrid=False)
+    lab_per_fig.layout.xaxis.fixedrange = True
+    lab_per_fig.layout.yaxis.fixedrange = True
+    lab_per_fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+    })
+    return lab_per_fig
+
+
 def line_chart(df, x_axis, yaxis, title, color="year"):
     lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
                           title=title, text=yaxis,
                           # text_auto='.3s',
                           category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
+                          )
+    lab_per_fig.update_layout(height=500)
+    lab_per_fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    lab_per_fig.update_traces(textposition='top center')
+    lab_per_fig.update_xaxes(showgrid=False)
+    lab_per_fig.update_yaxes(showgrid=False)
+    lab_per_fig.layout.xaxis.fixedrange = True
+    lab_per_fig.layout.yaxis.fixedrange = True
+    lab_per_fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+    })
+    return lab_per_fig
+
+def line_chart_expiry(df, x_axis, yaxis, text,title, color="year"):
+    lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
+                          title=title, text=text,
+                          # text_auto='.3s',
+                          category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
+                          )
+    lab_per_fig.update_layout(height=500)
+    lab_per_fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    lab_per_fig.update_traces(textposition='top center')
+    lab_per_fig.update_xaxes(showgrid=False)
+    lab_per_fig.update_yaxes(showgrid=False)
+    lab_per_fig.layout.xaxis.fixedrange = True
+    lab_per_fig.layout.yaxis.fixedrange = True
+    lab_per_fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+    })
+    return lab_per_fig
+
+
+def line_chart_summary(df, x_axis, yaxis, title, color="year"):
+    lab_per_fig = px.line(df, x=x_axis, y=yaxis, color=color,
+                          title=title, text=yaxis,
+                          # text_auto='.3s',
+                          category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]},
+                            hover_name = x_axis, hover_data = {'sales': True,
+                                                              "cost_of_sales": True,
+                                                              "gross_profit": True,
+                                                              "gross_profit %": True,
+                                                              "expenses": True,
+                                                              "net_profit": True,
+                                                               }
                           )
     lab_per_fig.update_layout(height=500)
     lab_per_fig.update_layout(legend=dict(
@@ -179,11 +308,18 @@ def sales_trend(df, indy1, indy2, indy3, indy4, indy5, indy6, title_text):
     return fig
 
 
+
+
 # @lru_cache(maxsize=1)
 def dash():
     qs = Sales.objects.all()
     ts = AnnualTarget.objects.all()
     wk = WeeklyData.objects.all()
+    mt = MonthlyTargets.objects.all()
+    tw = Twinkle.objects.all()
+    st = SummaryTable.objects.all()
+    end_st = Stock.objects.all()
+    ex = Expiry.objects.all()
     # assign it to a dataframe using list comprehension
     sales_data = [
         {'year': x.year,
@@ -207,11 +343,139 @@ def dash():
          'balance': x.balance,
          } for x in wk
     ]
+    monthly_target_data = [
+        {'year': x.year,
+         'month': x.month,
+         'lab monthly target': x.lab_target,
+         'pharmacy monthly target': x.pharma_target
+         } for x in mt
+    ]
+    twinkle_data = [
+        {'year': x.year,
+         'month': x.month,
+         'amount_received': x.amount_to_twinkle,
+         'amount_to_metro': x.amount_to_metropolis_diamond,
+         'amount_for_twinkle': x.amount_for_twinkle,
+         'commission': x.commission,
+         } for x in tw
+    ]
+    summary_data = [
+        {'year': x.year,
+         'month': x.month,
+         'sales': x.sales,
+         'cost_of_sales': x.cost_of_sales,
+         'gross_profit': x.gross_profit,
+         'expenses': x.expense,
+         'net_profit': x.net_profit,
+         } for x in st
+    ]
+
+    stock_data = [
+        {'year': x.year,
+         'month': x.month,
+         'end_month_stock': x.end_month_stock
+         } for x in end_st
+    ]
+    expiry_data = [
+        {'year': x.year,
+         'month': x.month,
+         'pharmacy_expiries': x.pharmacy_expiries,
+         'lab_expiries': x.lab_expiries
+         } for x in ex
+    ]
     # convert data from database to a dataframe
     df = pd.DataFrame(sales_data)
     df_target = pd.DataFrame(target_data)
     df_weekly = pd.DataFrame(weekly_data)
-    # print(df_weekly)
+    df_monthly_target = pd.DataFrame(monthly_target_data)
+    twinkle_df = pd.DataFrame(twinkle_data)
+    summary_table_df = pd.DataFrame(summary_data)
+    stock_df = pd.DataFrame(stock_data)
+    expiry_df = pd.DataFrame(expiry_data)
+
+    # summary table
+    summary_table_df['month'] = summary_table_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
+    summary_table_df['gross_profit %'] = round((summary_table_df['gross_profit']/summary_table_df['sales'])*100,1)
+    currentYear = datetime.now().year
+    summary_current_year=summary_table_df[summary_table_df['year']==currentYear]
+    # current_year_sales=bar_chart(summary_current_year, "month", 'sales', "title")
+    # summary_table_df['net_profit_'] = summary_table_df['net_profit'].apply(millify)
+    #
+    summary_table_fig_expenses = line_chart_summary(summary_table_df, 'month', 'expenses', "EXPENSES TREND")
+    summary_table_fig_net = line_chart_summary(summary_table_df, 'month', 'net_profit', "NET PROFIT TREND")
+    summary_table_fig_gross = line_chart_target(summary_table_df, 'month', 'gross_profit %', "GROSS PROFIT TREND")
+    summary_table_cos = line_chart_summary(summary_table_df, 'month', 'cost_of_sales', "COST OF SALES TREND")
+
+
+
+    # print("+++++++++++++++++++++++")
+    # print(summary_current_year)
+    stock_df['month'] = stock_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
+    stock_df['end_month_stock.'] = stock_df['end_month_stock'].apply(millify)
+
+    stock_fig = line_chart_stock_target(stock_df, 'month', 'end_month_stock','end_month_stock.', "END OF MONTH STOCK VALUATION TREND")
+
+    expiry_df['month'] = expiry_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
+    # expiry_df['pharmacy_expiries.'] = expiry_df['pharmacy_expiries'].apply(millify)
+    # expiry_df['lab_expiries.'] = expiry_df['lab_expiries'].apply(millify)
+    # expiry_df=expiry_df.melt(id_vars=['year','month'],value_vars=['pharmacy_expiries','lab_expiries'])
+    # pharmacy_expiries=expiry_df[expiry_df['variable']=="pharmacy_expiries"]
+    # lab_expiries=expiry_df[expiry_df['variable']=="lab_expiries"]
+    # print(expiry_df)
+    # print(pharmacy_expiries)
+    pharm_expiry_fig=line_chart_expiry(expiry_df, 'month', 'pharmacy_expiries', 'pharmacy_expiries', "PHARMACY LOSSES THROUGH EXPIRIES")
+    lab_expiry_fig=line_chart_expiry(expiry_df, 'month', 'lab_expiries', 'lab_expiries', "LABORATORY LOSSES THROUGH EXPIRIES")
+    # expiry_fig = line_chart_stock_target(expiry_df, 'month', ['pharmacy_expiries','lab_expiries'], 'value',
+    #                                     "END OF MONTH STOCK VALUATION TREND")
+
+    trend_fig = px.bar(summary_current_year, x="month", y=["sales",'cost_of_sales','gross_profit'],barmode='group',
+                       title=f"{currentYear} TREND",
+                       text_auto='.3s',
+                       category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]})
+    trend_fig.update_layout(height=500)
+    trend_fig.update_xaxes(showgrid=False)
+    trend_fig.update_yaxes(showgrid=False)
+    trend_fig.layout.xaxis.fixedrange = True
+    trend_fig.layout.yaxis.fixedrange = True
+    trend_fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+    })
+    trend_fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+
+
+    # Merge sales and monthly targets tables
+    df_monthly_merged=df.merge(df_monthly_target, on=["year","month"])
+    twinkle_df['tpl_revenue %']=round((twinkle_df['amount_for_twinkle']/twinkle_df['amount_received'])*100,1)
+    twinkle_df['revenue outside %']=round((twinkle_df['amount_to_metro']/twinkle_df['amount_received'])*100,1)
+    twinkle_df['month'] = twinkle_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
+    tpl_fig = line_chart(twinkle_df, "month", 'tpl_revenue %', 'TPL Revenue trend')
+    tpl_out_fig = line_chart(twinkle_df, "month", 'revenue outside %', 'Revenue going out trend')
+
+    # print(df)
+    # calculate percentage
+    df_monthly_merged['lab vs target']=round((df_monthly_merged['lab_contribution']/df_monthly_merged['lab monthly target'])*100,1)
+    df_monthly_merged['lab vs target %']=df_monthly_merged['lab vs target'].astype(str)+"%"
+
+    df_monthly_merged['pharm vs target'] = round(
+        (df_monthly_merged['pharmacy_contribution'] / df_monthly_merged['pharmacy monthly target']) * 100, 1)
+    df_monthly_merged['pharm vs target %'] = df_monthly_merged['pharm vs target'].astype(str) + "%"
+    df_monthly_merged['month'] = df_monthly_merged['month'].apply(lambda x: calendar.month_abbr[int(x)])
+    # make charts
+    monthlytarget_pharm_fig = line_chart(df_monthly_merged, "month", "pharm vs target", 'Pharmacy vs target trend')
+    monthlytarget_lab_fig = line_chart(df_monthly_merged, "month", "lab vs target", 'Laboratory vs target trend')
+
+
+
+
+
     df = df_target.merge(df, on="year", how='right')
     # print(df)
     df['year'] = df['year'].astype(str)
@@ -263,6 +527,7 @@ def dash():
     current_year_df = df[df['year'] == sorted(df['year'].unique())[-1]]
     current_year_sales = millify(sum(current_year_df['sales']))
     # last_month_with_data=last_month_with_data.strftime('%B-%Y')
+
     all_fig = px.bar(df, x="month_year", y=['pharmacy_contribution', 'lab_contribution'],
                      title=f"Laboratory and Pharmacy Sales trend   "
                            f"Max Pharmarcy: {max(df['pharmacy_contribution'])}  "
@@ -417,8 +682,28 @@ def dash():
     contr_plot = plot(contrib_fig, include_plotlyjs=False, output_type="div")
     total_sales_plot = plot(total_sales_fig, include_plotlyjs=False, output_type="div")
     moving_target_plot = plot(moving_target_fig, include_plotlyjs=False, output_type="div")
+    monthlytarget_pharm_plot = plot(monthlytarget_pharm_fig, include_plotlyjs=False, output_type="div")
+    monthlytarget_lab_plot = plot(monthlytarget_lab_fig, include_plotlyjs=False, output_type="div")
+    tpl_plot = plot(tpl_fig, include_plotlyjs=False, output_type="div")
+    tpl_out_plot = plot(tpl_out_fig, include_plotlyjs=False, output_type="div")
+    summary_table_plot = plot(summary_table_fig_expenses, include_plotlyjs=False, output_type="div")
+    summary_net_plot = plot(summary_table_fig_net, include_plotlyjs=False, output_type="div")
+    summary_gross_plot = plot(summary_table_fig_gross, include_plotlyjs=False, output_type="div")
+    summary_table_cos_plot = plot(summary_table_cos, include_plotlyjs=False, output_type="div")
+    current_year_trend_plot = plot(trend_fig, include_plotlyjs=False, output_type="div")
+    stock_plot = plot(stock_fig, include_plotlyjs=False, output_type="div")
+    pharm_expiry_fig = plot(pharm_expiry_fig, include_plotlyjs=False, output_type="div")
+    lab_expiry_fig = plot(lab_expiry_fig, include_plotlyjs=False, output_type="div")
+
+    # print("monthly_target...")
+    # print(monthly_target)
+
+
+
     return monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
-           perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target
+           perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
+           monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
+           summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig
 
 
 

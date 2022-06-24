@@ -1,0 +1,112 @@
+{% extends 'partials/base.html' %}
+
+{% block title %} Product page{% endblock %}
+{% load crispy_forms_tags %}
+{% load month_tags %}
+{% block content %}
+     <header class="masthead">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-12 text-center">
+        <h1 class="fw-light">Summary</h1>
+{#        <p class="lead">A great starter layout for a landing page</p>#}
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="col-md-7 mt-5">
+    <div >
+
+    <!--show flash messages-->
+
+    {% for message in messages %}
+                {% if message %}
+                    <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+    </div>
+    </div>
+
+     <!--Table-->
+    <div class="container-fluid">
+        <div class="row my-4">
+            <div class="col-md-auto">
+                <table class="table bg-white  table-hover table-responsive">
+                    <thead class="bg-info">
+                        <tr class="text-white">
+{#                            <th scope="col">#</th>#}
+                            <th scope="col">Year</th>
+                            <th scope="col">Month</th>
+                            <th scope="col">Pharmacy expiries</th>
+                            <th scope="col">Laboratory expiries</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in items %}
+                        <tr>
+{#                            <th scope="row">1</th>#}
+                            <td>{{ item.year }}</td>
+                            <td>{{ item.month|month_name }}</td>
+                            <td>{{ item.pharmacy_expiries }}</td>
+                            <td>{{ item.lab_expiries }}</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" href="{% url 'dashboard-expiry-update' item.id %}">Edit</a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'dashboard-expiry-delete' item.id %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% if items.has_other_pages %}
+    <ul class="pagination">
+   {% if items.has_previous %}
+     <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">Prev</a></li>
+   {% else %}
+     <li class="disabled"><span class="page-link" >Prev</span></li>
+   {% endif %}
+   {% for i in items.paginator.page_range %}
+     {% if items.number == i %}
+    <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+     {% else %}
+    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+     {% endif %}
+   {% endfor %}
+   {% if items.has_next %}
+     <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">Next</a></li>
+   {% else %}
+     <li class="disabled page-item"><span class="page-link">Next</span></li>
+   {% endif %}
+    </ul>
+  {% endif %}
+            </div>
+            <div class="col-md-auto">
+
+                <div class="border bg-white p-3">
+                    <h5>Add Expiries</h5>
+                    <hr>
+                    <form method="Post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+
+                        <input class="btn btn-success btn-block" type="submit" value="Add Expiries">
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+{#    <form method="POST">#}
+{#    #}
+{#    {% csrf_token %}#}
+{#        {{ form }}#}
+{#        <input type="submit">#}
+{#    </form>#}
+
+{% endblock %}

@@ -17,8 +17,9 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 
 from .dash import dash, profile
-from .forms import SalesForm, WeeklyDataForm, TwinkleForm, AnnualTargetForm
-from .models import Sales, WeeklyData, Twinkle, AnnualTarget
+from .forms import SalesForm, WeeklyDataForm, TwinkleForm, AnnualTargetForm, MonthlyTargetsForm, SummaryForm, StockForm, \
+    ExpiryForm
+from .models import Sales, WeeklyData, Twinkle, AnnualTarget, MonthlyTargets, SummaryTable, Stock, Expiry
 from .filter import SalesFilter
 
 
@@ -36,10 +37,18 @@ def pagination_(request, item_list):
 
 
 # Create your views here.
+monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
+perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,\
+twinkle_df,monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_fig,tpl_out_plot,summary_table_plot,\
+summary_net_plot,summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,\
+lab_expiry_fig = dash()
+
 @login_required(login_url='user-login')
 def index(request):
-    monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
-    perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target = dash()
+    # monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
+    # perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,\
+    # twinkle_df,monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_fig,tpl_out_plot,summary_table_plot,\
+    # summary_net_plot,summary_gross_plot,summary_table_cos_plot,current_year_trend_plot = dash()
 
     context = {
         "sales_plot": sales_plot,
@@ -54,6 +63,9 @@ def index(request):
         "reports_so_far":reports_so_far,
         "current_year_sales":current_year_sales,
         "monthly_target":monthly_target,
+        "current_year_trend_plot":current_year_trend_plot,
+        "stock_plot":stock_plot,
+
 
     }
     return render(request, "dashboard/index.html", context)
@@ -62,8 +74,10 @@ def index(request):
 
 @login_required(login_url='user-login')
 def contribution(request):
-    monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
-    perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target = dash()
+    # monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
+    # perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
+    # monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_fig,tpl_out_plot,summary_table_plot,summary_net_plot,\
+    # summary_gross_plot,summary_table_cos_plot,current_year_trend_plot= dash()
 
     context = {
         "sales_plot": sales_plot,
@@ -84,9 +98,72 @@ def contribution(request):
 
 
 @login_required(login_url='user-login')
-def annual_performance(request):
+def against_target(request):
+    # monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
+    # perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
+    # monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
+    # summary_gross_plot,summary_table_cos_plot,current_year_trend_plot= dash()
+
+    context = {
+        "perfomance_so_far": perfomance_so_far,
+        "last_month_with_data": last_month_with_data,
+        "reports_so_far": reports_so_far,
+        "current_year_sales": current_year_sales,
+
+        "monthly_target_pharm":monthlytarget_pharm_plot,
+        "monthly_target_lab":monthlytarget_lab_plot,
+
+    }
+    return render(request, "dashboard/against_target.html", context)
+
+
+
+@login_required(login_url='user-login')
+def summary_table(request):
+    # monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
+    # perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
+    # monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
+    # summary_gross_plot,summary_table_cos_plot,current_year_trend_plot= dash()
+
+    context = {
+        "perfomance_so_far": perfomance_so_far,
+        "last_month_with_data": last_month_with_data,
+        "reports_so_far": reports_so_far,
+        "current_year_sales": current_year_sales,
+
+        "summary_table_plot":summary_table_plot,
+        "summary_net_plot":summary_net_plot,
+        "summary_gross_plot":summary_gross_plot,
+        "summary_table_cos_plot":summary_table_cos_plot,
+        "pharm_expiry_fig":pharm_expiry_fig,
+        "lab_expiry_fig":lab_expiry_fig,
+
+    }
+    return render(request, "dashboard/summary_table.html", context)
+
+
+@login_required(login_url='user-login')
+def revenue(request):
     monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
-    perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target = dash()
+    perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
+    monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
+    summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig= dash()
+
+    context = {
+        "perfomance_so_far": perfomance_so_far,
+        "last_month_with_data": last_month_with_data,
+        "reports_so_far": reports_so_far,
+        "current_year_sales": current_year_sales,
+
+        "tpl_fig":tpl_plot,
+        "tpl_out_plot":tpl_out_plot,
+
+    }
+    return render(request, "dashboard/tpl_revenue.html", context)
+
+
+@login_required(login_url='user-login')
+def annual_performance(request):
 
     context = {
         "sales_plot": sales_plot,
@@ -108,8 +185,6 @@ def annual_performance(request):
 
 @login_required(login_url='user-login')
 def moving_target(request):
-    monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
-    perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target = dash()
 
     context = {
         "sales_plot": sales_plot,
@@ -370,3 +445,200 @@ def target_delete(request, pk):
         "items": item
     }
     return render(request, 'dashboard/target_delete.html', context)
+
+@login_required(login_url='user-login')
+def monthlytargets(request):
+    item_list = MonthlyTargets.objects.all().order_by('year')
+    if request.method == "POST":
+        form = MonthlyTargetsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # month_name = form.cleaned_data.get('month')
+            year_name = form.cleaned_data.get('year')
+            month_name = form.cleaned_data.get('month')
+            # print(type(month_name))
+            messages.success(request, f"{calendar.month_name[int(month_name)]} {year_name} targets have been added")
+            return redirect('dashboard-monthly-targets')
+    else:
+        form = MonthlyTargetsForm()
+    items = pagination_(request, item_list)
+
+    context = {
+        'form': form,
+        "items": items,
+    }
+    return render(request, "dashboard/monthly_target.html", context)
+
+@login_required(login_url='user-login')
+def monthly_target_delete(request, pk):
+    item = MonthlyTargets.objects.get(id=pk)
+    if request.method == "POST":
+        item.delete()
+        return redirect("dashboard-monthly-targets")
+    context = {
+        "items": item
+    }
+    return render(request, 'dashboard/monthly_target_delete.html', context)
+
+@login_required(login_url='user-login')
+def monthly_target_update(request, pk):
+    item = MonthlyTargets.objects.get(id=pk)
+    if request.method == "POST":
+        form = MonthlyTargetsForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard-monthly-targets")
+    else:
+        form = MonthlyTargetsForm(instance=item)
+    context = {
+        "form": form
+    }
+    return render(request, 'dashboard/monthly_target_update.html', context)
+
+@login_required(login_url='user-login')
+def summary(request):
+    item_list = SummaryTable.objects.all().order_by('year')
+    if request.method == "POST":
+        form = SummaryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # month_name = form.cleaned_data.get('month')
+            year_name = form.cleaned_data.get('year')
+            month_name = form.cleaned_data.get('month')
+            # print(type(month_name))
+            messages.success(request, f"{calendar.month_name[int(month_name)]} {year_name} data has been added to database")
+            return redirect('dashboard-summary')
+    else:
+        form = SummaryForm()
+    items = pagination_(request, item_list)
+
+    context = {
+        'form': form,
+        "items": items,
+    }
+    return render(request, "dashboard/summary.html", context)
+
+@login_required(login_url='user-login')
+def summary_delete(request, pk):
+    item = SummaryTable.objects.get(id=pk)
+    if request.method == "POST":
+        item.delete()
+        return redirect("dashboard-summary")
+    context = {
+        "items": item
+    }
+    return render(request, 'dashboard/summary_delete.html', context)
+
+
+@login_required(login_url='user-login')
+def summary_update(request, pk):
+    item = SummaryTable.objects.get(id=pk)
+    if request.method == "POST":
+        form = SummaryForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard-summary")
+    else:
+        form = SummaryForm(instance=item)
+    context = {
+        "form": form
+    }
+    return render(request, 'dashboard/summary_update.html', context)
+
+@login_required(login_url='user-login')
+def stocks(request):
+    item_list = Stock.objects.all().order_by('year')
+    if request.method == "POST":
+        form = StockForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # month_name = form.cleaned_data.get('month')
+            year_name = form.cleaned_data.get('year')
+            month_name = form.cleaned_data.get('month')
+            # print(type(month_name))
+            messages.success(request, f"{calendar.month_name[int(month_name)]} {year_name} data has been added to database")
+            return redirect('dashboard-stock')
+    else:
+        form = StockForm()
+    items = pagination_(request, item_list)
+
+    context = {
+        'form': form,
+        "items": items,
+    }
+    return render(request, "dashboard/stock.html", context)
+
+@login_required(login_url='user-login')
+def stock_delete(request, pk):
+    item = Stock.objects.get(id=pk)
+    if request.method == "POST":
+        item.delete()
+        return redirect("dashboard-stock")
+    context = {
+        "items": item
+    }
+    return render(request, 'dashboard/stock_delete.html', context)
+
+@login_required(login_url='user-login')
+def stock_update(request, pk):
+    item = Stock.objects.get(id=pk)
+    if request.method == "POST":
+        form = StockForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard-stock")
+    else:
+        form = StockForm(instance=item)
+    context = {
+        "form": form
+    }
+    return render(request, 'dashboard/stock_update.html', context)
+
+@login_required(login_url='user-login')
+def expiries(request):
+    item_list = Expiry.objects.all().order_by('year')
+    if request.method == "POST":
+        form = ExpiryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # month_name = form.cleaned_data.get('month')
+            year_name = form.cleaned_data.get('year')
+            month_name = form.cleaned_data.get('month')
+            messages.success(request, f"{calendar.month_name[int(month_name)]} {year_name} data has been added to database")
+            return redirect('dashboard-expiry')
+    else:
+        form = ExpiryForm()
+    items = pagination_(request, item_list)
+
+    context = {
+        'form': form,
+        "items": items,
+    }
+    return render(request, "dashboard/expiry.html", context)
+
+@login_required(login_url='user-login')
+def expiries_delete(request, pk):
+    item = Expiry.objects.get(id=pk)
+    if request.method == "POST":
+        item.delete()
+        return redirect("dashboard-expiry")
+    context = {
+        "items": item
+    }
+    return render(request, 'dashboard/expiry_delete.html', context)
+
+@login_required(login_url='user-login')
+def expiries_update(request, pk):
+    item = Expiry.objects.get(id=pk)
+    if request.method == "POST":
+        form = ExpiryForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard-expiry")
+    else:
+        form = ExpiryForm(instance=item)
+    context = {
+        "form": form
+    }
+    return render(request, 'dashboard/expiry_update.html', context)
+

@@ -1,0 +1,50 @@
+{% extends 'partials/base.html' %}
+{% block title %} Lab/Pharm contribution{% endblock %}
+
+
+    {% block content %}
+        {% include 'partials/topside_nav.html' %}
+        <div class="container ">
+        <div class="row">
+            <div class="col">
+
+{#            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
+{#                {% if user.is_authenticated and user.is_staff and user.is_superuser %}#}
+
+
+{#            {{ lab_plot }}#}
+{#            {{ sales_plot|safe}}#}
+{#        {% autoescape off %}#}
+{#            <hr>#}
+{#            {{ sales_plot|safe}}#}
+{#            <hr>#}
+{#            {{ all_plot|safe }}#}
+{#            <hr>#}
+                <hr>
+            {{ summary_table_cos_plot|safe }}
+            <hr>
+            {{ summary_gross_plot|safe }}
+            <hr>
+            {{ summary_net_plot|safe }}
+            <hr>
+            {{ summary_table_plot|safe }}
+            <hr>
+            {{ pharm_expiry_fig|safe }}
+            <hr>
+                {{ lab_expiry_fig|safe }}
+            <hr>
+
+{#            {{ moving_target_plot|safe }}#}
+{#            <hr>#}
+{#        {% endautoescape%}#}
+{#            {% else %}#}
+{#            {% include 'dashboard/staff_index.html' %}#}
+{#        {% endif %}#}
+
+            </div>
+        </div>
+        </div>
+
+
+
+    {% endblock %}

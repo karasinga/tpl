@@ -23,12 +23,39 @@
 {#      </li>#}
         <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Data portal
+          Set Targets
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href={% url 'dashboard-target' %}>Annual targets</a>
+            <a class="dropdown-item" href={% url 'dashboard-monthly-targets' %}>Monthly targets</a>
+{#            <div class="dropdown-divider"></div>#}
+{#          <a class="dropdown-item" href={% url 'dashboard-twinkle' %}>Commissions</a>#}
+{#          <div class="dropdown-divider"></div>#}
+{#          <a class="dropdown-item" href="#">Something else here</a>#}
+        </div>
+{#        <li class="nav-item active">#}
+{#        <li class="nav-item dropdown ">#}
+{#        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#          Raw data#}
+{#        </a>#}
+{#        <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+{#            <a class="dropdown-item" href={% url 'dashboard-target' %}>Annual targets</a>#}
+{#          <a class="dropdown-item" href={% url 'dashboard-product' %}>Monthly tracker</a>#}
+{#          <a class="dropdown-item" href={% url 'dashboard-product-weekly' %}>Weekly tracker</a>#}
+{#            <div class="dropdown-divider"></div>#}
+{#          <a class="dropdown-item" href={% url 'dashboard-twinkle' %}>Commissions</a>#}
+{#        </div>#}
+        <li class="nav-item active">
+        <li class="nav-item dropdown ">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Data portal
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+{#            <a class="dropdown-item" href={% url 'dashboard-target' %}>Annual targets</a>#}
           <a class="dropdown-item" href={% url 'dashboard-product' %}>Monthly tracker</a>
+            <a class="dropdown-item" href={% url 'dashboard-summary' %}>Summary</a>
           <a class="dropdown-item" href={% url 'dashboard-product-weekly' %}>Weekly tracker</a>
+            <a class="dropdown-item" href={% url 'dashboard-expiry' %}>Expiries</a>
             <div class="dropdown-divider"></div>
           <a class="dropdown-item" href={% url 'dashboard-twinkle' %}>Commissions</a>
 {#          <div class="dropdown-divider"></div>#}
@@ -49,11 +76,37 @@
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-index' %}>Trends<span class="sr-only">(current)</span></a>
       </li>
+
         <li class="nav-item active">
-        <a class="nav-link text-white" href={% url 'dashboard-contribution' %}>Lab & Pharm contribution<span class="sr-only">(current)</span></a>
-      </li>
+        <li class="nav-item dropdown ">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Laboratory and Pharmacy
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href={% url 'dashboard-contribution' %}>Lab & Pharm contribution</a>
+            <a class="dropdown-item" href={% url 'dashboard-against_target' %}>Lab & Pharm against target</a>
+        </div>
+
+
+
+
+
+
+
+{#        <li class="nav-item active">#}
+{#        <a class="nav-link text-white" href={% url 'dashboard-contribution' %}>Lab & Pharm contribution<span class="sr-only">(current)</span></a>#}
+{#      </li>#}
+{#        <li class="nav-item active">#}
+{#        <a class="nav-link text-white" href={% url 'dashboard-against_target' %}>Lab & Pharm against target<span class="sr-only">(current)</span></a>#}
+{#      </li>#}
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-annual_performance' %}>Annual performance <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link text-white" href={% url 'dashboard-revenue' %}>Revenue <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link text-white" href={% url 'dashboard-summary_viz' %}>Summary<span class="sr-only">(current)</span></a>
       </li>
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-moving_target' %}>Target <span class="sr-only">(current)</span></a>
@@ -110,14 +163,43 @@
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-index' %}>Trends<span class="sr-only">(current)</span></a>
       </li>
+
+        <li class="nav-item active">
+        <li class="nav-item dropdown ">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Laboratory and Pharmacy
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href={% url 'dashboard-contribution' %}>Lab & Pharm contribution</a>
+            <a class="dropdown-item" href={% url 'dashboard-against_target' %}>Lab & Pharm against target</a>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-contribution' %}>Lab & Pharm contribution<span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link text-white" href={% url 'dashboard-against_target' %}>Lab & Pharm against target<span class="sr-only">(current)</span></a>
       </li>
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-annual_performance' %}>Annual performance <span class="sr-only">(current)</span></a>
       </li>
         <li class="nav-item active">
         <a class="nav-link text-white" href={% url 'dashboard-moving_target' %}>Target <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link text-white" href={% url 'dashboard-summary_viz' %}>Summary<span class="sr-only">(current)</span></a>
       </li>
 
         <li class="nav-item active">
