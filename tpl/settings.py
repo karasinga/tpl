@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from django.conf.global_settings import DATABASES
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -86,10 +85,10 @@ WSGI_APPLICATION = 'tpl.wsgi.application'
 #     }
 # }
 
-import dj_database_url
-
-db_from_env=dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+#
+# db_from_env=dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 
 # DATABASES = {
@@ -103,16 +102,16 @@ DATABASES['default'].update(db_from_env)
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'dbiq06hac6bvnk',
-#         'USER': 'sigrbdyitoqkri',
-#         'PASSWORD': 'b9647a7dd606c49a5aa0cfe5bdd618a5a1af44d4074cc364d39d64a02a3cdfa6',
-#         'HOST': 'ec2-44-206-89-185.compute-1.amazonaws.com',
-#         'POST': '',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd46ibkoltihkam',
+        'USER': 'iccsizhcoucmxc',
+        'PASSWORD': '7e094558ff226fcf43e02984bae1c98494bdb2c31507d95abb57a3baf9d87338',
+        'HOST': 'ec2-18-204-142-254.compute-1.amazonaws.com',
+        'POST': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
