@@ -84,14 +84,14 @@ def line_chart_stock_target(df, x_axis, yaxis,text, title,color="year"):
                           category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
                           )
-    lab_per_fig.add_hline(y=1500000, line_dash="dash", line_color="green")
-    lab_per_fig.add_hline(y=1700000, line_dash="dash", line_color="red")
-    lab_per_fig.add_annotation(x=0.5, y=1500000,
-                       text="Minimum Target (1.5M)",
+    lab_per_fig.add_hline(y=1700000, line_dash="dash", line_color="green")
+    lab_per_fig.add_hline(y=2000000, line_dash="dash", line_color="red")
+    lab_per_fig.add_annotation(x=0.5, y=1700000,
+                       text="Minimum Target (1.7M)",
                        showarrow=True,
                        arrowhead=1)
-    lab_per_fig.add_annotation(x=1.5, y=1700000,
-                               text="Maximum Target (1.7M)",
+    lab_per_fig.add_annotation(x=1.5, y=2000000,
+                               text="Maximum Target (2M)",
                                showarrow=True,
                                arrowhead=1)
     lab_per_fig.update_layout(height=500)
@@ -423,7 +423,14 @@ def dash():
     # print(summary_current_year)
     stock_df['month'] = stock_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
     stock_df['end_month_stock.'] = stock_df['end_month_stock'].apply(millify)
-
+    # print("stock_df")
+    stock_df.loc[:, 'month'] = pd.Categorical(stock_df['month'],
+                                                      categories=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+                                                                  'Aug', 'Sep',
+                                                                  'Oct', 'Nov', 'Dec'],
+                                                      ordered=True)
+    stock_df.sort_values('month', inplace=True)
+    # print(stock_df)
     stock_fig = line_chart_stock_target(stock_df, 'month', 'end_month_stock','end_month_stock.', "END OF MONTH STOCK VALUATION TREND")
 
     expiry_df['month'] = expiry_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
@@ -476,8 +483,8 @@ def dash():
     twinkle_df['tpl_revenue %']=round((twinkle_df['amount_for_twinkle']/twinkle_df['amount_received'])*100,1)
     twinkle_df['revenue outside %']=round((twinkle_df['amount_to_metro']/twinkle_df['amount_received'])*100,1)
     twinkle_df['month'] = twinkle_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
-    tpl_fig = line_chart(twinkle_df, "month", 'tpl_revenue %', 'TPL Revenue trend')
-    tpl_out_fig = line_chart(twinkle_df, "month", 'revenue outside %', 'Revenue going out trend')
+    tpl_fig = line_chart(twinkle_df, "month", 'tpl_revenue %', 'Laboratory Revenue trend')
+    tpl_out_fig = line_chart(twinkle_df, "month", 'revenue outside %', 'Laboratory revenue going out trend')
 
     # print(df)
     # calculate percentage
@@ -489,6 +496,9 @@ def dash():
     df_monthly_merged['pharm vs target %'] = df_monthly_merged['pharm vs target'].astype(str) + "%"
     df_monthly_merged['month'] = df_monthly_merged['month'].apply(lambda x: calendar.month_abbr[int(x)])
     # make charts
+    # print(df_monthly_merged[['year','month','pharmacy_contribution','pharmacy monthly target','pharm vs target',
+    #                          'pharm vs target %','lab vs target','lab vs target %']])
+    # print(df_monthly_merged)
     monthlytarget_pharm_fig = line_chart(df_monthly_merged, "month", "pharm vs target", 'Pharmacy vs target trend')
     monthlytarget_lab_fig = line_chart(df_monthly_merged, "month", "lab vs target", 'Laboratory vs target trend')
 
