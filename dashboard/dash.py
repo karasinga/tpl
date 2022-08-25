@@ -439,9 +439,9 @@ def dash():
     # expiry_fig = line_chart_stock_target(expiry_df, 'month', ['pharmacy_expiries','lab_expiries'], 'value',
     #                                     "END OF MONTH STOCK VALUATION TREND")
     # print(summary_previous_year)
-    def trend(summary_current_year,currentYear):
-        trend_fig = px.bar(summary_current_year, x="month", y=["sales",'cost_of_sales','gross_profit'],barmode='group',
-                           title=f"{currentYear} TREND",
+    def trend(summary_current_year,currentYear,y=["sales",'cost_of_sales','gross_profit'],trend=""):
+        trend_fig = px.bar(summary_current_year, x="month", y=y,barmode='group',
+                           title=f"{currentYear} {trend} TREND",
                            text_auto='.3s',
                            category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]})
@@ -465,6 +465,10 @@ def dash():
 
     trend_fig=trend(summary_current_year, currentYear)
     trend_fig_previous=trend(summary_previous_year, currentYear-1)
+    trend_fig_previous_prev=trend(summary_previous_year, currentYear-1,y=['gross_profit','expenses','net_profit'],
+                                  trend="OVERALL GROSS PROFIT VS EXPENSES VS NET PROFIT")
+    trend_fig_expenses_curr=trend(summary_current_year, currentYear,y=['gross_profit','expenses','net_profit']
+                                  ,trend="OVERALL GROSS PROFIT VS EXPENSES VS NET PROFIT")
 
 
     # Merge sales and monthly targets tables
@@ -708,6 +712,8 @@ def dash():
     summary_table_cos_plot = plot(summary_table_cos, include_plotlyjs=False, output_type="div")
     current_year_trend_plot = plot(trend_fig, include_plotlyjs=False, output_type="div")
     previous_year_trend_plot = plot(trend_fig_previous, include_plotlyjs=False, output_type="div")
+    previous_year_trend_fig_expenses_plot = plot(trend_fig_previous_prev, include_plotlyjs=False, output_type="div")
+    current_year_trend_fig_expenses_plot = plot(trend_fig_expenses_curr, include_plotlyjs=False, output_type="div")
     stock_plot = plot(stock_fig, include_plotlyjs=False, output_type="div")
     pharm_expiry_fig = plot(pharm_expiry_fig, include_plotlyjs=False, output_type="div")
     lab_expiry_fig = plot(lab_expiry_fig, include_plotlyjs=False, output_type="div")
@@ -721,7 +727,7 @@ def dash():
            perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
            monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
            summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig,\
-           previous_year_trend_plot
+           previous_year_trend_plot,current_year_trend_fig_expenses_plot,previous_year_trend_fig_expenses_plot
 
 
 
