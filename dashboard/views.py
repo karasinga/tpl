@@ -41,7 +41,7 @@ monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sal
 perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,\
 twinkle_df,monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_fig,tpl_out_plot,summary_table_plot,\
 summary_net_plot,summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,\
-lab_expiry_fig = dash()
+lab_expiry_fig,previous_year_trend_plot = dash()
 
 @login_required(login_url='user-login')
 def index(request):
@@ -64,6 +64,7 @@ def index(request):
         "current_year_sales":current_year_sales,
         "monthly_target":monthly_target,
         "current_year_trend_plot":current_year_trend_plot,
+        "previous_year_trend_plot":previous_year_trend_plot,
         "stock_plot":stock_plot,
 
 
@@ -147,7 +148,8 @@ def revenue(request):
     monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
     perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
     monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
-    summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig= dash()
+    summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig,\
+    previous_year_trend_plot= dash()
 
     context = {
         "perfomance_so_far": perfomance_so_far,

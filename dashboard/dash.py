@@ -1,5 +1,5 @@
 import calendar
-from functools import lru_cache
+# from functools import lru_cache
 from datetime import datetime
 import math
 
@@ -396,11 +396,22 @@ def dash():
     # summary table
     summary_table_df['month'] = summary_table_df['month'].apply(lambda x: calendar.month_abbr[int(x)])
     summary_table_df['gross_profit %'] = round((summary_table_df['gross_profit']/summary_table_df['sales'])*100,1)
+    # print("summary_table_df...")
+    # print(summary_table_df.head(18))
     currentYear = datetime.now().year
+
     summary_current_year=summary_table_df[summary_table_df['year']==currentYear]
+    summary_previous_year=summary_table_df[summary_table_df['year']==currentYear-1]
+
     # current_year_sales=bar_chart(summary_current_year, "month", 'sales', "title")
     # summary_table_df['net_profit_'] = summary_table_df['net_profit'].apply(millify)
-    #
+
+    summary_table_df.loc[:, 'month'] = pd.Categorical(summary_table_df['month'],
+                                        categories=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+                                                    'Oct', 'Nov', 'Dec'],
+                                        ordered=True)
+    summary_table_df.sort_values('month', inplace=True)
+
     summary_table_fig_expenses = line_chart_summary(summary_table_df, 'month', 'expenses', "EXPENSES TREND")
     summary_table_fig_net = line_chart_summary(summary_table_df, 'month', 'net_profit', "NET PROFIT TREND")
     summary_table_fig_gross = line_chart_target(summary_table_df, 'month', 'gross_profit %', "GROSS PROFIT TREND")
@@ -427,28 +438,33 @@ def dash():
     lab_expiry_fig=line_chart_expiry(expiry_df, 'month', 'lab_expiries', 'lab_expiries', "LABORATORY LOSSES THROUGH EXPIRIES")
     # expiry_fig = line_chart_stock_target(expiry_df, 'month', ['pharmacy_expiries','lab_expiries'], 'value',
     #                                     "END OF MONTH STOCK VALUATION TREND")
+    # print(summary_previous_year)
+    def trend(summary_current_year,currentYear):
+        trend_fig = px.bar(summary_current_year, x="month", y=["sales",'cost_of_sales','gross_profit'],barmode='group',
+                           title=f"{currentYear} TREND",
+                           text_auto='.3s',
+                           category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]})
+        trend_fig.update_layout(height=500)
+        trend_fig.update_xaxes(showgrid=False)
+        trend_fig.update_yaxes(showgrid=False)
+        trend_fig.layout.xaxis.fixedrange = True
+        trend_fig.layout.yaxis.fixedrange = True
+        trend_fig.update_layout({
+            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+        })
+        trend_fig.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ))
+        return trend_fig
 
-    trend_fig = px.bar(summary_current_year, x="month", y=["sales",'cost_of_sales','gross_profit'],barmode='group',
-                       title=f"{currentYear} TREND",
-                       text_auto='.3s',
-                       category_orders={"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]})
-    trend_fig.update_layout(height=500)
-    trend_fig.update_xaxes(showgrid=False)
-    trend_fig.update_yaxes(showgrid=False)
-    trend_fig.layout.xaxis.fixedrange = True
-    trend_fig.layout.yaxis.fixedrange = True
-    trend_fig.update_layout({
-        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
-        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
-    })
-    trend_fig.update_layout(legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1
-    ))
+    trend_fig=trend(summary_current_year, currentYear)
+    trend_fig_previous=trend(summary_previous_year, currentYear-1)
 
 
     # Merge sales and monthly targets tables
@@ -691,6 +707,7 @@ def dash():
     summary_gross_plot = plot(summary_table_fig_gross, include_plotlyjs=False, output_type="div")
     summary_table_cos_plot = plot(summary_table_cos, include_plotlyjs=False, output_type="div")
     current_year_trend_plot = plot(trend_fig, include_plotlyjs=False, output_type="div")
+    previous_year_trend_plot = plot(trend_fig_previous, include_plotlyjs=False, output_type="div")
     stock_plot = plot(stock_fig, include_plotlyjs=False, output_type="div")
     pharm_expiry_fig = plot(pharm_expiry_fig, include_plotlyjs=False, output_type="div")
     lab_expiry_fig = plot(lab_expiry_fig, include_plotlyjs=False, output_type="div")
@@ -703,7 +720,8 @@ def dash():
     return monthly_target, sales_plot, all_plot, lab_plot, phar_plot, contr_plot, total_sales_plot, moving_target_plot, \
            perfomance_so_far, last_month_with_data, reports_so_far, current_year_sales, monthly_target,twinkle_df,\
            monthlytarget_pharm_plot,monthlytarget_lab_plot,tpl_plot,tpl_out_plot,summary_table_plot,summary_net_plot,\
-           summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig
+           summary_gross_plot,summary_table_cos_plot,current_year_trend_plot,stock_plot,pharm_expiry_fig,lab_expiry_fig,\
+           previous_year_trend_plot
 
 
 
