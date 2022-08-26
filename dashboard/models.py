@@ -13,6 +13,7 @@ class Sales(models.Model):
     sales = models.FloatField()
     lab_contribution = models.FloatField()
     pharmacy_contribution = models.FloatField()
+    mpesa_contribution = models.FloatField()
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 

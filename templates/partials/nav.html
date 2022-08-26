@@ -54,7 +54,7 @@
 {#            <a class="dropdown-item" href={% url 'dashboard-target' %}>Annual targets</a>#}
           <a class="dropdown-item" href={% url 'dashboard-product' %}>Monthly tracker</a>
             <a class="dropdown-item" href={% url 'dashboard-summary' %}>Summary</a>
-          <a class="dropdown-item" href={% url 'dashboard-product-weekly' %}>Weekly tracker</a>
+{#          <a class="dropdown-item" href={% url 'dashboard-product-weekly' %}>Weekly tracker</a>#}
             <a class="dropdown-item" href={% url 'dashboard-expiry' %}>Expiries</a>
             <a class="dropdown-item" href={% url 'dashboard-stock' %}>Stock valuation</a>
             <div class="dropdown-divider"></div>
@@ -114,6 +114,7 @@
       </li>
         <li class="nav-item active">
         <a class="nav-link " href={% url 'user-logout' %}>Logout<span class="sr-only">(current)</span></a>
+{#        <a class="nav-link " href={% url 'user-login' %}>Logout<span class="sr-only">(current)</span></a>#}
       </li>
     </ul>
   </div>
@@ -205,6 +206,7 @@
 
         <li class="nav-item active">
         <a class="nav-link " href={% url 'user-logout' %}>Logout<span class="sr-only">(current)</span></a>
+{#        <a class="nav-link " href={% url 'user-login' %}>Logout<span class="sr-only">(current)</span></a>#}
       </li>
     </ul>
   </div>

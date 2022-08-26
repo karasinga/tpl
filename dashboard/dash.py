@@ -327,6 +327,7 @@ def dash():
          'sales': x.sales,
          'lab_contribution': x.lab_contribution,
          'pharmacy_contribution': x.pharmacy_contribution,
+         'mpesa_contribution': x.mpesa_contribution,
          } for x in qs
     ]
 
@@ -385,6 +386,8 @@ def dash():
     ]
     # convert data from database to a dataframe
     df = pd.DataFrame(sales_data)
+    print("initiial sales df")
+    print(df)
     df_target = pd.DataFrame(target_data)
     df_weekly = pd.DataFrame(weekly_data)
     df_monthly_target = pd.DataFrame(monthly_target_data)
@@ -513,7 +516,7 @@ def dash():
     df['year_month'] = df['year'] + df['month']
     df['year_month'] = pd.to_datetime(df['year_month'], format='%Y%m', errors='coerce').dropna() + MonthEnd(1)
     df = df.groupby(['year_month', 'year', 'month']).sum()[
-        ['sales', 'lab_contribution', 'pharmacy_contribution']].reset_index().sort_values("year_month")
+        ['sales', 'lab_contribution', 'pharmacy_contribution','mpesa_contribution']].reset_index().sort_values("year_month")
     df_grouped = df.copy()
     df['% of lab contribution'] = round(df['lab_contribution'] / df['sales'] * 100, 1)
     df['% of pharmacy contribution'] = round(df['pharmacy_contribution'] / df['sales'] * 100, 1)
@@ -557,8 +560,10 @@ def dash():
     current_year_df = df[df['year'] == sorted(df['year'].unique())[-1]]
     current_year_sales = millify(sum(current_year_df['sales']))
     # last_month_with_data=last_month_with_data.strftime('%B-%Y')
+    print("lab and phar")
+    print(df.tail(18))
 
-    all_fig = px.bar(df, x="month_year", y=['pharmacy_contribution', 'lab_contribution'],
+    all_fig = px.bar(df.tail(18), x="month_year", y=['pharmacy_contribution', 'lab_contribution','mpesa_contribution'],
                      title=f"Laboratory and Pharmacy Sales trend   "
                            f"Max Pharmarcy: {max(df['pharmacy_contribution'])}  "
                            f"Max Laboratory: {max(df['lab_contribution'])}",
